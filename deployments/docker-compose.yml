@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # Banco de Dados (PostgreSQL) - Requisito: Banco de dados (PostgreSQL)
+  db:
+    image: postgres:15-alpine
+    container_name: loja-veloz-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: senha_segura
+      POSTGRES_DB: pedidos_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # API Gateway (HTTP) - Requisito: API Gateway
+  api-gateway:
+    build: ../services/api-gateway
+    container_name: service-gateway
+    ports:
+      - "8080:3000"
+
+  # Serviço de Pedidos - Requisito: Serviço de Pedidos
+  pedidos:
+    build: ../services/pedidos
+    container_name: service-pedidos
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+
+  # Serviço de Estoque - Requisito: Serviço de Estoque
+  estoque:
+    build: ../services/estoque
+    container_name: service-estoque
+    ports:
+      - "3002:3000"
+    depends_on:
+      - db
+
+  # Serviço de Pagamentos - Requisito: Serviço de Pagamentos
+  pagamentos:
+    build: ../services/pagamentos
+    container_name: service-pagamentos
+    ports:
+      - "3003:3000"
+
+  # Prometheus - Coletor de métricas para Observabilidade
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: loja-veloz-prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  # Grafana - Painel visual para métricas e monitoramento
+  grafana:
+    image: grafana/grafana:latest
+    container_name: loja-veloz-grafana
+    ports:
+      - "3004:3000"
+    depends_on:
+      - prometheus
+
+# Definição de volumes globais para persistência de dados
+volumes:
+  postgres_data:

@@ -1,0 +1,30 @@
+# Nome da nossa automação
+name: CI/CD Pipeline Loja Veloz
+
+# Gatilho: Executa sempre que houver um 'push' na branch main
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # O robô roda em um servidor Linux do GitHub
+
+    steps:
+    - name: Baixar o código do repositório
+      uses: actions/checkout@v3
+
+    - name: Configurar o Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Instalar dependências e testar
+      run: |
+        cd services/pedidos
+        npm install
+        # Aqui entrariam os comandos de teste: npm test
+
+    - name: Construir imagem Docker (Simulação)
+      run: |
+        docker build -t bruna/pedidos:latest ./services/pedidos

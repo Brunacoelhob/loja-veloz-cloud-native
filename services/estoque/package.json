@@ -1,0 +1,14 @@
+{
+  "name": "estoque",
+  "version": "1.0.0",
+  "description": "Serviço de Estoque da Loja Veloz - Responsável por reserva e baixa de itens",
+  "author": "Bruna - Estudante de ADS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "prom-client": "^15.1.3"
+  }
+}
