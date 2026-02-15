@@ -19,12 +19,29 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Instalar dependências e testar
+    - name: Instalar dependências e validar API Gateway
+      run: |
+        cd services/api-gateway
+        npm install
+
+    - name: Instalar dependências e validar Pedidos
       run: |
         cd services/pedidos
         npm install
-        # Aqui entrariam os comandos de teste: npm test
 
-    - name: Construir imagem Docker (Simulação)
+    - name: Instalar dependências e validar Estoque
       run: |
+        cd services/estoque
+        npm install
+
+    - name: Instalar dependências e validar Pagamentos
+      run: |
+        cd services/pagamentos
+        npm install
+
+    - name: Construir imagens Docker (Simulação de Build)
+      run: |
+        docker build -t bruna/api-gateway:latest ./services/api-gateway
         docker build -t bruna/pedidos:latest ./services/pedidos
+        docker build -t bruna/estoque:latest ./services/estoque
+        docker build -t bruna/pagamentos:latest ./services/pagamentos
